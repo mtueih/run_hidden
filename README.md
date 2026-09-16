@@ -51,7 +51,7 @@ include(${PROJECT_SOURCE_DIR}/cmake/CPM.cmake)
 CPMAddPackage(
 	NAME run_hidden
 	GITHUB_REPOSITORY mtueih/run_hidden
-	GIT_TAG v0.1.0
+	GIT_TAG v1.0.0
 )
 
 target_link_libraries(your_target PRIVATE run_hidden::run_hidden)

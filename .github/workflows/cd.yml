@@ -26,7 +26,7 @@ jobs:
       - name: Package artifacts
         run: |
           mkdir dist
-          Copy-Item .\build\Release\run_hidden.exe, .\build\Release\run_hidden_wait.exe .\dist\
+          Copy-Item .\build\run_hidden.exe, .\build\run_hidden_wait.exe .\dist\
           Compress-Archive -Path .\dist\* -DestinationPath run_hidden.zip
 
       - name: Upload artifact

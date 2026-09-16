@@ -15,7 +15,8 @@ jobs:
 
       - name: Configure CMake
         run: >
-          cmake . -B build 
+          cmake . -B build
+          -G Ninja
           -DCMAKE_BUILD_TYPE=Release
           -DRUN_HIDDEN_INSTALL=OFF
           -DRUN_HIDDEN_BUILD_EXECUTABLE=ON
@@ -26,7 +27,8 @@ jobs:
       - name: Package artifacts
         run: |
           mkdir dist
-          Copy-Item .\build\run_hidden.exe, .\build\run_hidden_wait.exe .\dist\
+          Copy-Item .\build\run_hidden.exe .\dist\
+          Copy-Item .\build\run_hidden_wait.exe .\dist\
           Compress-Archive -Path .\dist\* -DestinationPath run_hidden.zip
 
       - name: Upload artifact

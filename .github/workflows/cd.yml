@@ -1,0 +1,56 @@
+name: CD
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Configure CMake
+        run: >
+          cmake . -B build 
+          -DCMAKE_BUILD_TYPE=Release
+          -DRUN_HIDDEN_INSTALL=OFF
+          -DRUN_HIDDEN_BUILD_EXECUTABLE=ON
+
+      - name: CMake Build
+        run: cmake --build build --parallel
+
+      - name: Package artifacts
+        run: |
+          mkdir dist
+          Copy-Item .\build\Release\run_hidden.exe, .\build\Release\run_hidden_wait.exe .\dist\
+          Compress-Archive -Path .\dist\* -DestinationPath run_hidden.zip
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: run_hidden
+          path: run_hidden.zip
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v7
+        with:
+          path: artifacts
+
+      - name: Create Release and Upload Assets
+        uses: softprops/action-gh-release@v3
+        with:
+          files: artifacts/**/*.zip
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -50,6 +50,10 @@ if (RUN_HIDDEN_BUILD_EXECUTABLE)
 
 		target_link_libraries(${RUN_HIDDEN_TGT_NAME} PRIVATE ${RUN_HIDDEN_MAIN_LIB_TARGET_NAME})
 		target_compile_definitions(${RUN_HIDDEN_TGT_NAME} PRIVATE $<$<CONFIG:Debug>:DEBUG>)
+
+		if (MSVC)
+			target_link_options(${RUN_HIDDEN_TGT_NAME} PRIVATE "/ENTRY:mainCRTStartup")
+		endif ()
 	endforeach ()
 
 	# run_hidden_wait。

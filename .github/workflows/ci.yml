@@ -32,6 +32,7 @@ jobs:
 
         include:
           - os: windows-latest
+            cmake_version: [ 3.21.0, latest ]
             c_compiler: cl
             c_standard: '17'
 

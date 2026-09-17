@@ -49,7 +49,7 @@ int run_hidden(const char *cmd_line, bool is_wait);
 ```cmake
 include(${PROJECT_SOURCE_DIR}/cmake/CPM.cmake)
 
-CPMAddPackage("gh:mtueih/run_hidden#v1.0.1")
+CPMAddPackage("gh:mtueih/run_hidden#v1.0.2")
 
 target_link_libraries(your_target PRIVATE run_hidden)
 ```

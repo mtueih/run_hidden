@@ -22,7 +22,18 @@ jobs:
       matrix:
         os: [ windows-latest ]
         cmake_version: [ 3.21.0, latest ]
+        c_compiler: [ cl ]
         c_standard: [ '99', '23' ]
+
+        exclude:
+          - os: windows-latest
+            c_compiler: cl
+            c_standard: '23'
+
+        include:
+          - os: windows-latest
+            c_compiler: cl
+            c_standard: '17'
 
     runs-on: ${{ matrix.os }}
 
@@ -32,6 +43,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
+
+      - name: Setup MSVC
+        uses: ilammy/msvc-dev-cmd@v1
+        if: runner.os == 'Windows' && matrix.c_compiler == 'cl'
 
       - name: Setup sccache
         uses: mozilla-actions/sccache-action@v0.0.11
@@ -48,6 +63,7 @@ jobs:
         run: >
           cmake . -B build
           -G Ninja
+          -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
           -DCMAKE_C_STANDARD=${{ matrix.c_standard }}
           -DCMAKE_C_COMPILER_LAUNCHER=sccache
 

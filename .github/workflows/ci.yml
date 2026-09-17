@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+    paths: &ci_paths
+      - 'src/**'
+      - 'include/**'
+      - 'main.c'
+      - 'CMakeLists.txt'
+      - '.github/workflows/ci.yml'
+  pull_request:
+    branches: [ main ]
+    paths: *ci_paths
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+
+      matrix:
+        os: [ windows-latest ]
+        c_standard: [ '99', '23' ]
+        cmake_version: [ 3.21.0, latest ]
+
+    runs-on: ${{ matrix.os }}
+
+    env:
+      SCCACHE_GHA_ENABLED: 'true'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Setup sccache
+        uses: mozilla-actions/sccache-action@v0.0.11
+
+      - uses: lukka/get-cmake@latest
+        with:
+          cmakeVersion: ${{ matrix.cmake_version }}
+
+      - name: Echo CMake and Ninja version
+        run: |
+          cmake --version
+          ninja --version
+
+      - name: Configure CMake
+        run: >
+          cmake . -B build
+          -G Ninja
+          -DCMAKE_C_STANDARD=${{ matrix.c_standard }}
+          -DCMAKE_C_COMPILER_LAUNCHER=sccache
+
+      - name: CMake Build
+        run: cmake --build build --parallel

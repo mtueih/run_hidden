@@ -1,14 +1,17 @@
 # run_hidden
 
 ![Platform](https://img.shields.io/badge/Platform-Windows-blue)
-[![C Standard](https://img.shields.io/badge/C-C99/C11/C17/C23-blue.svg)](https://zh.cppreference.com/c)
+[![C Standard](https://img.shields.io/badge/C-C99+-blue.svg)](https://zh.cppreference.com/c)
 [![CMake](https://img.shields.io/badge/CMake-3.21+-green.svg)](https://cmake.org/)
+[![CI](https://github.com/mtueih/run_hidden/actions/workflows/ci.yml/badge.svg)](https://github.com/mtueih/run_hidden/actions/workflows/ci.yml)
 
 ## 使用方法/示例
 
 ### 命令行工具
 
-包含两个命令行工具：`run_hidden.exe` 和 `run_hidden_wait.exe`，前者成功启动目标程序后立即返回 `0`，后者等待目标程序执行完毕，接收并返回其退出码。
+包含两个命令行工具：`run_hidden.exe` 和 `run_hidden_wait.exe`。
+前者成功启动目标程序后立即返回 `0`；
+后者等待目标程序执行完毕，接收并返回其退出码。
 
 两者使用方法是一致的，以 `run_hidden.exe` 为例：
 
@@ -31,28 +34,21 @@ run_hidden.exe '"C:\Program Files\Notepad3\Notepad3.exe" temp.txt'
 int run_hidden(const char *cmd_line, bool is_wait);
 ```
 
-- `cmd_line`：目标程序及参数；
-
+- `cmd_line`：包含目标程序及参数的单个字符串。
 - `is_wait`：是否等待目标程序执行完毕，然后接收并返回其退出码。
 
 ## 添加依赖
 
 ### CPM.cmake
 
-环境要求：
-
-- [CPM.cmake](https://github.com/cpm-cmake/CPM.cmake)。
+环境要求：[CPM.cmake](https://github.com/cpm-cmake/CPM.cmake)。
 
 在 `CMakeLists.txt` 中：
 
 ```cmake
 include(${PROJECT_SOURCE_DIR}/cmake/CPM.cmake)
 
-CPMAddPackage(
-	NAME run_hidden
-	GITHUB_REPOSITORY mtueih/run_hidden
-	GIT_TAG v1.0.0
-)
+CPMAddPackage("gh:mtueih/run_hidden#v1.0.0")
 
-target_link_libraries(your_target PRIVATE run_hidden::run_hidden)
+target_link_libraries(your_target PRIVATE run_hidden)
 ```

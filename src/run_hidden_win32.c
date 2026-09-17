@@ -1,6 +1,4 @@
 #include "run_hidden.h"
-
-#include <stdlib.h>
 #include <windows.h>
 
 #ifdef DEBUG

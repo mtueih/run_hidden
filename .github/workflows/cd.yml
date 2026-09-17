@@ -2,8 +2,7 @@ name: CD
 
 on:
   push:
-    tags:
-      - 'v*'
+    tags: [ 'v*' ]
 
 jobs:
   build:
@@ -18,8 +17,6 @@ jobs:
           cmake . -B build
           -G Ninja
           -DCMAKE_BUILD_TYPE=Release
-          -DRUN_HIDDEN_INSTALL=OFF
-          -DRUN_HIDDEN_BUILD_EXECUTABLE=ON
 
       - name: CMake Build
         run: cmake --build build --parallel

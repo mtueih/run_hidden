@@ -7,32 +7,47 @@ on:
 jobs:
   build:
     runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
 
     steps:
+      - name: Setup MSYS2 UCRT64
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          install: >-
+            base-devel
+            mingw-w64-ucrt-x86_64-toolchain
+            mingw-w64-ucrt-x86_64-cmake
+            mingw-w64-ucrt-x86_64-ninja
+            zip
+
       - name: Checkout
         uses: actions/checkout@v7
 
       - name: Configure CMake
-        run: >
-          cmake . -B build
-          -G Ninja
-          -DCMAKE_BUILD_TYPE=Release
+        run: cmake . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
 
       - name: CMake Build
         run: cmake --build build --parallel
 
+      - name: Strip binaries
+        run: |
+          strip --strip-all build/run_hidden.exe
+          strip --strip-all build/run_hidden_wait.exe
+
       - name: Package artifacts
         run: |
-          mkdir dist
-          Copy-Item .\build\run_hidden.exe .\dist\
-          Copy-Item .\build\run_hidden_wait.exe .\dist\
-          Compress-Archive -Path .\dist\* -DestinationPath run_hidden.zip
+          mkdir release
+          cp build/run_hidden.exe build/run_hidden_wait.exe release/
+          zip -r run_hidden-${{ github.ref_name }}.zip release/
 
       - name: Upload artifact
         uses: actions/upload-artifact@v7
         with:
-          name: run_hidden
-          path: run_hidden.zip
+          name: run_hidden-${{ github.ref_name }}
+          path: run_hidden-${{ github.ref_name }}.zip
 
   release:
     needs: build

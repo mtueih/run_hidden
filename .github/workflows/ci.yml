@@ -21,8 +21,8 @@ jobs:
 
       matrix:
         os: [ windows-latest ]
-        c_standard: [ '99', '23' ]
         cmake_version: [ 3.21.0, latest ]
+        c_standard: [ '99', '23' ]
 
     runs-on: ${{ matrix.os }}
 
@@ -39,11 +39,10 @@ jobs:
       - uses: lukka/get-cmake@latest
         with:
           cmakeVersion: ${{ matrix.cmake_version }}
+        if: matrix.cmake_version != 'latest'
 
-      - name: Echo CMake and Ninja version
-        run: |
-          cmake --version
-          ninja --version
+      - name: Echo CMake version
+        run: cmake --version
 
       - name: Configure CMake
         run: >

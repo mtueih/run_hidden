@@ -2,7 +2,7 @@
 
 ![Platform](https://img.shields.io/badge/Platform-Windows-blue)
 [![C Standard](https://img.shields.io/badge/C-C99+-blue.svg)](https://zh.cppreference.com/c)
-[![CMake](https://img.shields.io/badge/CMake-3.21+-green.svg)](https://cmake.org/)
+[![CMake](https://img.shields.io/badge/CMake-3.24+-green.svg)](https://cmake.org/)
 [![CI](https://github.com/mtueih/run_hidden/actions/workflows/ci.yml/badge.svg)](https://github.com/mtueih/run_hidden/actions/workflows/ci.yml)
 [![CD](https://github.com/mtueih/run_hidden/actions/workflows/cd.yml/badge.svg)](https://github.com/mtueih/run_hidden/actions/workflows/cd.yml)
 
@@ -49,7 +49,7 @@ int run_hidden(const char *cmd_line, bool is_wait);
 ```cmake
 include(${PROJECT_SOURCE_DIR}/cmake/CPM.cmake)
 
-CPMAddPackage("gh:mtueih/run_hidden#v1.0.4")
+CPMAddPackage("gh:mtueih/run_hidden#v0.1.0")
 
 target_link_libraries(your_target PRIVATE run_hidden)
 ```

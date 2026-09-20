@@ -6,7 +6,7 @@ on:
     paths: &ci_paths
       - 'src/**'
       - 'include/**'
-      - 'main.c'
+      - 'cli/**'
       - 'CMakeLists.txt'
       - '.github/workflows/ci.yml'
   pull_request:
@@ -21,7 +21,7 @@ jobs:
 
       matrix:
         os: [ windows-latest ]
-        cmake_version: [ 3.21.0, latest ]
+        cmake_version: [ 3.24.0, latest ]
         c_compiler: [ cl ]
         c_standard: [ '99', '23' ]
 
@@ -32,7 +32,7 @@ jobs:
 
         include:
           - os: windows-latest
-            cmake_version: 3.21.0
+            cmake_version: 3.24.0
             c_compiler: cl
             c_standard: '17'
 

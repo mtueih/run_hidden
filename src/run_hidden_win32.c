@@ -25,7 +25,7 @@ int run_hidden(const char *const cmd_line, const bool is_wait)
 		const DWORD err_code = GetLastError();
 #ifdef DEBUG
 		fprintf(
-			stderr, "[%s | %s]: [Error]: CreateProcessA failed with error %lu.\n",
+			stderr, "[%s | %s]: [Error]: CreateProcessA() failed with error %lu.\n",
 			__FILE__, __func__, err_code);
 #endif
 		return (int)err_code ? (int)err_code : 1;

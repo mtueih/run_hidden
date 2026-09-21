@@ -9,42 +9,39 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v7
+    - name: Checkout
+      uses: actions/checkout@v7
 
-      - name: Setup MSVC
-        uses: ilammy/msvc-dev-cmd@v1
+    - name: Setup MSVC
+      uses: ilammy/msvc-dev-cmd@v1
 
-      - name: Configure CMake
-        run: >
-          cmake . -B build 
-          -G Ninja
-          -DCMAKE_C_COMPILER=cl
-          -DCMAKE_BUILD_TYPE=Release
+    - name: Configure CMake
+      run: >
+        cmake . -B build  -G Ninja -DCMAKE_C_COMPILER=cl -DCMAKE_BUILD_TYPE=Release
 
-      - name: CMake Build
-        run: cmake --build build --parallel
+    - name: CMake Build
+      run: cmake --build build --parallel
 
-      - name: Package artifacts
-        run: |
-          $artifacts = @(
-            "run_hidden.exe",
-            "run_hidden_wait.exe"
-          )
-          
-          mkdir dist
-        
-          foreach ($atf in $artifacts) {
-            Copy-Item .\build\$atf -Destination .\dist
-          }
-          
-          Compress-Archive -Path .\dist\* -DestinationPath run_hidden-${{ github.ref_name }}.zip
+    - name: Package artifacts
+      run: |
+        $artifacts = @(
+          "run_hidden.exe",
+          "run_hidden_wait.exe"
+        )
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v7
-        with:
-          name: run_hidden-${{ github.ref_name }}
-          path: run_hidden-${{ github.ref_name }}.zip
+        mkdir dist
+
+        foreach ($atf in $artifacts) {
+          Copy-Item .\build\$atf -Destination .\dist
+        }
+
+        Compress-Archive -Path .\dist\* -DestinationPath run_hidden-${{ github.ref_name }}.zip
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v7
+      with:
+        name: run_hidden-${{ github.ref_name }}
+        path: run_hidden-${{ github.ref_name }}.zip
 
   release:
     needs: [ build-windows ]
@@ -53,15 +50,15 @@ jobs:
       contents: write
 
     steps:
-      - name: Download all artifacts
-        uses: actions/download-artifact@v7
-        with:
-          path: artifacts
+    - name: Download all artifacts
+      uses: actions/download-artifact@v7
+      with:
+        path: artifacts
 
-      - name: Create Release and Upload Assets
-        uses: softprops/action-gh-release@v3
-        with:
-          files: artifacts/**/*.zip
-          generate_release_notes: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Create Release and Upload Assets
+      uses: softprops/action-gh-release@v3
+      with:
+        files: artifacts/**/*.zip
+        generate_release_notes: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,12 +1,13 @@
-#include "run_hidden.h"
+#include "mtueih/run_hidden.h"
 #include <windows.h>
 
+
 #ifdef DEBUG
-#include <stdio.h>
+#  include <stdio.h>
 #endif
 
 
-int run_hidden(const char *cmd_line, const bool is_wait) {
+int run_hidden(const char *const cmd_line, const bool is_wait) {
 	STARTUPINFOA si = {0};
 	PROCESS_INFORMATION pi = {0};
 	DWORD exit_code = 0;
@@ -30,7 +31,7 @@ int run_hidden(const char *cmd_line, const bool is_wait) {
 			__FILE__, __func__, err_code
 		);
 #endif
-		return (int)err_code;
+		return (int)err_code ? (int)err_code : 1;
 	}
 
 	if (is_wait) {

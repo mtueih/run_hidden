@@ -14,6 +14,7 @@ on:
     paths: *ci_paths
   workflow_dispatch:
 
+
 jobs:
   build:
     strategy:
@@ -26,20 +27,20 @@ jobs:
         c_standard: [ '99', '23' ]
 
         exclude:
-          - os: windows-latest
-            c_compiler: cl
-            c_standard: '23'
+        - os: windows-latest
+          c_compiler: cl
+          c_standard: '23'
 
         include:
-          - os: windows-latest
-            cmake_version: 3.24.0
-            c_compiler: cl
-            c_standard: '17'
+        - os: windows-latest
+          cmake_version: 3.24.0
+          c_compiler: cl
+          c_standard: '17'
 
-          - os: windows-latest
-            cmake_version: latest
-            c_compiler: cl
-            c_standard: '17'
+        - os: windows-latest
+          cmake_version: latest
+          c_compiler: cl
+          c_standard: '17'
 
     runs-on: ${{ matrix.os }}
 
@@ -47,31 +48,27 @@ jobs:
       SCCACHE_GHA_ENABLED: 'true'
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v7
+    - name: Checkout code
+      uses: actions/checkout@v7
 
-      - name: Setup MSVC
-        uses: ilammy/msvc-dev-cmd@v1
-        if: runner.os == 'Windows' && matrix.c_compiler == 'cl'
+    - name: Setup MSVC
+      uses: ilammy/msvc-dev-cmd@v1
+      if: runner.os == 'Windows' && matrix.c_compiler == 'cl'
 
-      - name: Setup sccache
-        uses: mozilla-actions/sccache-action@v0.0.11
+    - name: Setup sccache
+      uses: mozilla-actions/sccache-action@v0.0.11
 
-      - uses: lukka/get-cmake@latest
-        with:
-          cmakeVersion: ${{ matrix.cmake_version }}
-        if: matrix.cmake_version != 'latest'
+    - uses: lukka/get-cmake@latest
+      with:
+        cmakeVersion: ${{ matrix.cmake_version }}
+      if: matrix.cmake_version != 'latest'
 
-      - name: Echo CMake version
-        run: cmake --version
+    - name: Echo CMake version
+      run: cmake --version
 
-      - name: Configure CMake
-        run: >
-          cmake . -B build
-          -G Ninja
-          -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
-          -DCMAKE_C_STANDARD=${{ matrix.c_standard }}
-          -DCMAKE_C_COMPILER_LAUNCHER=sccache
+    - name: Configure CMake
+      run: >
+        cmake . -B build -G Ninja -DCMAKE_C_COMPILER=${{ matrix.c_compiler }} -DCMAKE_C_STANDARD=${{ matrix.c_standard }} -DCMAKE_C_COMPILER_LAUNCHER=sccache
 
-      - name: CMake Build
-        run: cmake --build build --parallel
+    - name: CMake Build
+      run: cmake --build build --parallel

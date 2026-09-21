@@ -51,5 +51,5 @@ include(${PROJECT_SOURCE_DIR}/cmake/CPM.cmake)
 
 CPMAddPackage("gh:mtueih/run_hidden#v0.1.0")
 
-target_link_libraries(your_target PRIVATE run_hidden)
+target_link_libraries(your_target PRIVATE mtueih::run_hidden)
 ```

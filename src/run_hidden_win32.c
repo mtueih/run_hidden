@@ -1,13 +1,12 @@
 #include "mtueih/run_hidden.h"
 #include <windows.h>
 
-
 #ifdef DEBUG
-#  include <stdio.h>
+#include <stdio.h>
 #endif
 
-
-int run_hidden(const char *const cmd_line, const bool is_wait) {
+int run_hidden(const char *const cmd_line, const bool is_wait)
+{
 	STARTUPINFOA si = {0};
 	PROCESS_INFORMATION pi = {0};
 	DWORD exit_code = 0;
@@ -17,25 +16,24 @@ int run_hidden(const char *const cmd_line, const bool is_wait) {
 	si.wShowWindow = SW_HIDE;
 
 	if (!CreateProcessA(
-			NULL, (char*)cmd_line,
+			NULL, (char *)cmd_line,
 			NULL, NULL, FALSE,
 			CREATE_NO_WINDOW,
 			NULL, NULL,
-			&si, &pi
-		)
-	) {
+			&si, &pi))
+	{
 		const DWORD err_code = GetLastError();
 #ifdef DEBUG
 		fprintf(
 			stderr, "[%s | %s]: [Error]: CreateProcessA failed with error %lu.\n",
-			__FILE__, __func__, err_code
-		);
+			__FILE__, __func__, err_code);
 #endif
 		return (int)err_code ? (int)err_code : 1;
 	}
 
-	if (is_wait) {
-		WaitForSingleObject(pi.hProcess, INFINITE);  // 等待子进程结束
+	if (is_wait)
+	{
+		WaitForSingleObject(pi.hProcess, INFINITE);	 // 等待子进程结束
 		GetExitCodeProcess(pi.hProcess, &exit_code); // 获取退出码
 	}
 

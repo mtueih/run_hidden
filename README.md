@@ -29,14 +29,32 @@ run_hidden.exe '"C:\Program Files\Notepad3\Notepad3.exe" temp.txt'
 也就是说，目标程序及其参数，需要写进一个参数中，多余的参数会被忽略；
 不传任何参数时，可执行程序返回 `0`。
 
-### API
+## API
+
+### `run_hidden()`
 
 ```c
 int run_hidden(const char *cmd_line, bool is_wait);
 ```
 
-- `cmd_line`：包含目标程序及参数的单个字符串。
+- `cmd_line`：包含目标程序及参数的单个字符串（应使用系统代码页编码）。
 - `is_wait`：是否等待目标程序执行完毕，然后接收并返回其退出码。
+
+### `run_hidden_w()`
+
+```c
+int run_hidden_w(wchar_t *cmd_line, bool is_wait);
+```
+
+`run_hidden()` 的非 const 宽字符串版本。
+
+### `run_hidden_cw()`
+
+```c
+int run_hidden_cw(const wchar_t *cmd_line, bool is_wait);
+```
+
+`run_hidden()` 的 const 宽字符串版本。
 
 ## 添加依赖
 

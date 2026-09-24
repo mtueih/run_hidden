@@ -1,4 +1,4 @@
-#include "mtueih/run_hidden.h"
+#include "run_hidden/run_hidden.h"
 
 int main(int argc, char *argv[])
 {
@@ -7,9 +7,5 @@ int main(int argc, char *argv[])
 		return 0;
 	}
 
-#ifdef RUN_HIDDEN_WAIT_MODE
-	return run_hidden(argv[1], true);
-#else
 	return run_hidden(argv[1], false);
-#endif
 }

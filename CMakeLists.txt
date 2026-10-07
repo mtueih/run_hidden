@@ -42,18 +42,26 @@ target_compile_definitions(${MAIN_LIB_TARGET_NAME} PRIVATE $<$<CONFIG:Debug>:DEB
 set(CLI_NAMES "run_hidden" "run_hidden_wait")
 
 if(RUN_HIDDEN_BUILD_CLI)
+    include(${PROJECT_SOURCE_DIR}/cmake/CPM.cmake)
+    CPMAddPackage("gh:mtueih/dynamic_string#v2.0.0")
+
     foreach(CLI_NAME ${CLI_NAMES})
         set(CLI_TARGET_NAME cli_${CLI_NAME})
 
-        add_executable(${CLI_TARGET_NAME} WIN32 cli/${CLI_NAME}.c)
+        add_executable(${CLI_TARGET_NAME} WIN32 cli/main.c)
         set_target_properties(${CLI_TARGET_NAME} PROPERTIES OUTPUT_NAME ${CLI_NAME})
 
         target_link_libraries(${CLI_TARGET_NAME} PRIVATE ${MAIN_LIB_TARGET_NAME})
+        target_link_libraries(${CLI_TARGET_NAME} PRIVATE dynamic_string::dynamic_string)
+
+        target_compile_definitions(${CLI_TARGET_NAME} PRIVATE $<$<CONFIG:Debug>:DEBUG>)
 
         if(MSVC)
             target_link_options(${CLI_TARGET_NAME} PRIVATE "/ENTRY:mainCRTStartup")
         endif()
     endforeach()
+
+    target_compile_definitions("cli_run_hidden_wait" PRIVATE RUN_HIDDEN_CLI_WAIT_MODE)
 endif()
 
 

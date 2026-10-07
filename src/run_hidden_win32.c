@@ -7,6 +7,10 @@
 #ifdef DEBUG
 #include <inttypes.h>
 #include <stdio.h>
+
+#define PUT_ERR(err_msg) fprintf(stderr, "[%s:%d] %s: %s\n", __FILE__, __LINE__, __func__, err_msg)
+#define PUT_ERR_FMT(fmt, ...)                                                                      \
+	fprintf(stderr, "[%s:%d] %s: " fmt "\n", __FILE__, __LINE__, __func__, __VA_ARGS__)
 #endif
 
 
@@ -18,9 +22,7 @@ int run_hidden(const char *const cmd_line, const bool is_wait) {
 	if (wide_len == 0) {
 		const DWORD err_code = GetLastError();
 #ifdef DEBUG
-		fprintf(stderr,
-				"[%s | %s]: [Error]: MultiByteToWideChar() failed with error %" PRIu32 ".\n",
-				__FILE__, __func__, err_code);
+		PUT_ERR_FMT("MultiByteToWideChar() failed with error %" PRIu32 ".", err_code);
 #endif
 		return ((int)err_code != 0) ? (int)err_code : 1;
 	}
@@ -31,7 +33,7 @@ int run_hidden(const char *const cmd_line, const bool is_wait) {
 	wchar_t *const wide_buf = malloc(wide_buf_size);
 	if (wide_buf == NULL) {
 #ifdef DEBUG
-		fprintf(stderr, "[%s | %s]: [Error]: malloc() failed.\n", __FILE__, __func__);
+		PUT_ERR("malloc() failed.");
 #endif
 		return 1;
 	}
@@ -41,9 +43,7 @@ int run_hidden(const char *const cmd_line, const bool is_wait) {
 	if (result == 0) {
 		const DWORD err_code = GetLastError();
 #ifdef DEBUG
-		fprintf(stderr,
-				"[%s | %s]: [Error]: MultiByteToWideChar() failed with error %" PRIu32 ".\n",
-				__FILE__, __func__, err_code);
+		PUT_ERR_FMT("MultiByteToWideChar() failed with error %" PRIu32 ".", err_code);
 #endif
 		return ((int)err_code != 0) ? (int)err_code : 1;
 	}
@@ -59,7 +59,7 @@ int run_hidden_w(const wchar_t *const cmd_line, const bool is_wait) {
 	wchar_t *const buf = malloc(buf_size);
 	if (buf == NULL) {
 #ifdef DEBUG
-		fprintf(stderr, "[%s | %s]: [Error]: malloc() failed.\n", __FILE__, __func__);
+		PUT_ERR("malloc() failed.");
 #endif
 		return 1;
 	}
@@ -84,8 +84,7 @@ int run_hidden_w_mut(wchar_t *const cmd_line, const bool is_wait) {
 						&pi)) {
 		const DWORD err_code = GetLastError();
 #ifdef DEBUG
-		fprintf(stderr, "[%s | %s]: [Error]: CreateProcessW() failed with error %" PRIu32 ".\n",
-				__FILE__, __func__, err_code);
+		PUT_ERR_FMT("CreateProcessW() failed with error %" PRIu32 ".", err_code);
 #endif
 		return ((int)err_code != 0) ? (int)err_code : 1;
 	}

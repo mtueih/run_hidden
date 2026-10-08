@@ -91,7 +91,7 @@ int run_hidden_w_mut(wchar_t *cmd_line, bool is_wait);
 ```cmake
 include(${PROJECT_SOURCE_DIR}/cmake/CPM.cmake)
 
-CPMAddPackage("gh:mtueih/run_hidden#v0.2.0")
+CPMAddPackage("gh:mtueih/run_hidden#v0.3.0")
 ```
 
 #### CMake find_package（需已安装）
@@ -136,7 +136,7 @@ run_hidden("\"C:\\Program Files\\Notepad3\\Notepad3.exe\" temp.txt", false);
 #### 克隆仓库
 
 ```bash
-git clone https://github.com/mtueih/run_hidden.git --depth 1 -b v0.2.0
+git clone https://github.com/mtueih/run_hidden.git --depth 1 -b v0.3.0
 cd run_hidden
 ```
 

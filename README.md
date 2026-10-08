@@ -15,37 +15,43 @@
 
 此项目包含两个 CLI 工具：`run_hidden` 和 `run_hidden_wait`。
 
-两者使用方法完全一致。区别仅在于：前者**成功启动目标程序**后立即返回 *`0`*；后者**等待目标程序执行完毕**并**返回其*退出码***。
+两者使用方法完全一致。区别仅在于：前者**成功启动目标程序**后立即返回 _`0`_；后者**等待目标程序执行完毕**并**返回其*退出码***。
+
+> 在 Windows 平台上，由于工具本身编译为 GUI 程序，以实现自身窗口的隐藏（否则会有命令行窗口一闪而过），而导致通过 shell 执行工具时，可能无法正常接受其退出码，但这并不是工具自身的问题，一些其他的特殊方式是可以拿到退出码的，比如：
+>
+> - Windows API：`CreateProcess()` + `WaitForSingleObject()` + `GetExitCodeProcess()`。
+> - cmd 命令：`cmd /c start /wait`。
+> - PowerShell 命令：`Start-Process -Wait`。
 
 ### 使用方法
 
-- `run_hidden <cmd_line>`。
-- `run_hidden_wait <cmd_line>`。
+- `run_hidden <program> [args...]`。
+- `run_hidden_wait <program> [args...]`。
 
 ### 参数说明
 
-`cmd_line` 是包含**目标程序路径**及**参数**的单个字符串，比如：
+`<program>` 是要启动的可执行文件，`[args...]` 是传给它的参数。
 
-- `"C:\Program Files\Notepad3\Notepad3.exe"`。
-- `"\"C:\Program Files\Notepad3\Notepad3.exe\" temp.txt"`。
+例如：
 
-当此字符串中包含引号时，请使用所用 shell 允许的转义语法正确转义。
+```shell
+run_hidden "C:\Program Files\Notepad3\Notepad3.exe" "C:\Temp\my notes.txt"
+run_hidden_wait "C:\Tools\worker.exe" --mode "quick run"
+```
 
-“**目标程序**”只允许**可执行文件**；
-
-“**目标程序路径**”不支持从 `PATH` 中搜索，“**目标程序路径**”和“**参数**”中的路径允许**绝对路径**和**相对路径**。
+`<program>` 必须是可执行文件。在 Windows 平台上，支持相对路径和 PATH 路径。
 
 ### 行为说明
 
-多余的参数会被忽略；不传任何参数时，返回 *`0`*。
+必须至少提供 `<program>`；未传入任何参数时，CLI 返回 _`1`_。除程序名外，所有参数都会传给目标程序。
 
 ## API
 
 此项目只包含用于实现一个行为的 API 函数，所有 API 函数都只是用于实现这个行为的不同变体。
 
-其中，`run_hidden_w()`、`run_hidden_cw()` 接受宽字符串。这主要是为了支持 Windows 平台，因为 Windows 平台原生使用宽字符串编码。当手头已有宽字符串时，使用宽字符串版本，可减少不必要的编码转换开销。
+其中，`run_hidden_w()`、`run_hidden_w_mut()` 接受宽字符串。这主要是为了支持 Windows 平台，因为 Windows 平台原生使用宽字符串编码。当手头已有宽字符串时，使用宽字符串版本，可减少不必要的编码转换开销。
 
-而 `run_hidden_w()` 和 `run_hidden_cw()` 之分，是出于 Windows API 的支持，Windows API 要求输入是可修改的，因此 `run_hidden_cw()` 会分配临时缓冲区以存储输入的一份副本，再将临时缓冲区传给 Windows API。当字符串已是可修改缓冲区中的内容时，使用 `run_hidden_w()` 可减少一次内存分配与数据拷贝的开销。
+而 `run_hidden_w()` 和 `run_hidden_w_mut()` 之分，是出于 Windows API 的支持，Windows API 要求输入是可修改的，因此 `run_hidden_w()` 会分配临时缓冲区以存储输入的一份副本，再将临时缓冲区传给 Windows API。当字符串已是可修改缓冲区中的内容时，使用 `run_hidden_w_mut()` 可减少一次内存分配与数据拷贝的开销。
 
 ### `run_hidden()`
 
@@ -58,18 +64,18 @@ int run_hidden(const char *cmd_line, bool is_wait);
 
 ### `run_hidden_w()`
 
-`run_hidden()` 的非 const 宽字符串版本。
+`run_hidden()` 的宽字符串版本。
 
 ```c
 int run_hidden_w(wchar_t *cmd_line, bool is_wait);
 ```
 
-### `run_hidden_cw()`
+### `run_hidden_w_mut()`
 
-`run_hidden()` 的 const 宽字符串版本。
+`run_hidden()` 的可修改宽字符串版本。
 
 ```c
-int run_hidden_cw(const wchar_t *cmd_line, bool is_wait);
+int run_hidden_w_mut(wchar_t *cmd_line, bool is_wait);
 ```
 
 ## 在其他项目中使用（仅库）
@@ -108,22 +114,14 @@ target_link_libraries(your_target PRIVATE run_hidden::run_hidden)
 
 #### 引入头文件
 
-```cpp
+```c
 #include <run_hidden/run_hidden.h>
 ```
 
 #### 使用库函数
 
-在 C 代码中：
-
 ```c
-run_hidden("\"C:\Program Files\\Notepad3\\Notepad3.exe\" temp.txt", false);
-```
-
-在 C++ 代码中：
-
-```cpp
-run_hidden::run_hidden("\"C:\Program Files\\Notepad3\\Notepad3.exe\" temp.txt", false);
+run_hidden("\"C:\\Program Files\\Notepad3\\Notepad3.exe\" temp.txt", false);
 ```
 
 ## 从源码构建

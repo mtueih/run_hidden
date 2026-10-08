@@ -2,3 +2,8 @@ cmake-build-*/
 build/
 .idea/
 .vscode/
+
+cli/test
+cli/test.exe
+cli/test.txt
+test.txt

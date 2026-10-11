@@ -1,8 +1,8 @@
 # run_hidden
 
-![Platform](https://img.shields.io/badge/Platform-Windows-blue)
+![Platform](https://img.shields.io/badge/Platform-Windows_XP+-blue.svg)
 [![C Standard](https://img.shields.io/badge/C-C99+-blue.svg)](https://zh.cppreference.com/c)
-[![xmake](https://img.shields.io/badge/xmake-build-green.svg)](https://xmake.io/)
+[![xmake](https://img.shields.io/badge/Build_System-xmake-green.svg)](https://xmake.io/)
 [![GitHub License](https://img.shields.io/github/license/mtueih/run_hidden)](LICENSE)
 [![CI](https://github.com/mtueih/run_hidden/actions/workflows/ci.yml/badge.svg)](https://github.com/mtueih/run_hidden/actions/workflows/ci.yml)
 [![CD](https://github.com/mtueih/run_hidden/actions/workflows/cd.yml/badge.svg)](https://github.com/mtueih/run_hidden/actions/workflows/cd.yml)
@@ -47,12 +47,6 @@ run_hidden_wait "C:\Tools\worker.exe" --mode "quick run"
 
 ## API
 
-此项目只包含用于实现一个行为的 API 函数，所有 API 函数都只是用于实现这个行为的不同变体。
-
-其中，`run_hidden_w()`、`run_hidden_w_mut()` 接受宽字符串。这主要是为了支持 Windows 平台，因为 Windows 平台原生使用宽字符串编码。当手头已有宽字符串时，使用宽字符串版本，可减少不必要的编码转换开销。
-
-而 `run_hidden_w()` 和 `run_hidden_w_mut()` 之分，是出于 Windows API 的支持，Windows API 要求输入是可修改的，因此 `run_hidden_w()` 会分配临时缓冲区以存储输入的一份副本，再将临时缓冲区传给 Windows API。当字符串已是可修改缓冲区中的内容时，使用 `run_hidden_w_mut()` 可减少一次内存分配与数据拷贝的开销。
-
 ### `run_hidden()`
 
 ```c
@@ -62,21 +56,42 @@ int run_hidden(const char *cmd_line, bool is_wait);
 - `cmd_line`：包含目标程序及参数的单个字符串（应使用系统代码页编码）。
 - `is_wait`：是否等待目标程序执行完毕，然后返回其退出码。
 
-### `run_hidden_w()`
+> `run_hidden_w()`、`run_hidden_w_mut()` 是 `run_hidden()` 的变体，它们接受宽字符串。这主要是为了支持 Windows 平台，因为 Windows 平台原生使用宽字符串编码。当手头已有宽字符串时，使用宽字符串版本，可减少不必要的编码转换开销。
+>
+> 而 `run_hidden_w()` 和 `run_hidden_w_mut()` 之分，是出于 Windows API 的支持，Windows API 要求输入是可修改的，因此 `run_hidden_w()` 会分配临时缓冲区以存储输入的一份副本，再将临时缓冲区传给 Windows API。当字符串已是可修改缓冲区中的内容时，使用 `run_hidden_w_mut()` 可减少一次内存分配与数据拷贝的开销。
 
-`run_hidden()` 的宽字符串版本。
+### `run_hidden_build_cmd_line()`
 
-```c
-int run_hidden_w(wchar_t *cmd_line, bool is_wait);
-```
-
-### `run_hidden_w_mut()`
-
-`run_hidden()` 的可修改宽字符串版本。
+从参数串数组解析并构造完整命令行字符串。
 
 ```c
-int run_hidden_w_mut(wchar_t *cmd_line, bool is_wait);
+unsigned run_hidden_build_cmd_line(
+    const char *const *args, unsigned args_count,
+    char *out_buf, unsigned buf_len
+);
 ```
+
+参数：
+
+- `args`：参数串数组。
+- `args_count`：参数串个数。
+- `out_buf`：输出缓冲区指针。为*空指针*用于计算长度。
+- `buf_len`：输出缓冲区可写入的字节数，不包括 `'\0'`。传入非空 `out_buf` 时，缓冲区至少需要 `buf_len + 1` 个字节；若空间不足，结果会被截断。
+
+返回值： `out_buf` 为空时返回所需字节数（不包括 `'\0'`）；否则返回实际写入的字节数。
+
+### `run_hidden_build_cmd_line_from_argv()`（宏）
+
+从来自 `main` 函数的 `argc` 和 `argv` 解析并构造完整命令行字符串（忽略 `argv[0]`）。
+
+```c
+#define run_hidden_build_cmd_line_from_argv(argc, argv, out_buf, buf_len) \
+    run_hidden_build_cmd_line((argv) + 1, (argc) - 1, out_buf, buf_len)
+```
+
+这是一个调用 API 函数 `run_hidden_build_cmd_line()` 的宏。
+
+> ⚠️注意：此宏参数 `argc` 和 `argv` 的顺序与 `run_hidden_build_cmd_line()` 相反。
 
 ## 在其他项目中使用（仅库）
 
@@ -110,8 +125,9 @@ run_hidden("\"C:\\Program Files\\Notepad3\\Notepad3.exe\" temp.txt", false);
 
 ### 环境要求
 
-- [xmake](https://xmake.io/)。
-- 支持 [C99](https://zh.cppreference.com/c/99)+ 的 [C 编译器](https://zh.cppreference.com/c/compiler_support)（MSVC / MinGW-w64 / Clang）。
+- **操作系统**：Windows XP+。
+- **构建工具**：[xmake](https://xmake.io/) 最新版。
+- **C 编译器**：支持 C99+ （Windows 推荐 MSVC）。
 
 ### 构建步骤
 
@@ -125,12 +141,13 @@ cd run_hidden
 #### 配置、构建与安装
 
 ```bash
-xmake f -m release --install_lib=y --install_cli=y
-xmake -j
+xmake
 xmake install -o install
 ```
 
-`--install_lib=y` 与 `--install_cli=y` 分别启用库和 CLI 工具的安装；不需要安装某项时可删除对应选项。`xmake install -o install` 会将产物安装到 `install` 目录。CLI 默认参与构建，可用 `--build_cli=n` 关闭；C 标准默认为 C99，可用 `--c_standard=17` 或 `--c_standard=23` 切换。
+有关上述命令的说明：
+
+- 安装命令。通过 `-o install` 将产物安装在了 `install` 目录下，而不是全局安装，以便你按自己的方式使用安装产物。如果你希望全局安装，则删除它即可。
 
 ## 许可协议
 

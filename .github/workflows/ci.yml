@@ -7,7 +7,7 @@ on:
       - "src/**"
       - "include/**"
       - "cli/**"
-      - "CMakeLists.txt"
+      - "xmake.lua"
       - ".github/workflows/ci.yml"
   pull_request:
     branches: [main]
@@ -21,7 +21,6 @@ jobs:
 
       matrix:
         os: [windows-latest]
-        cmake_version: [3.24.0, latest]
         c_compiler: [cl]
         c_standard: ["99", "23"]
 
@@ -32,19 +31,10 @@ jobs:
 
         include:
           - os: windows-latest
-            cmake_version: 3.24.0
-            c_compiler: cl
-            c_standard: "17"
-
-          - os: windows-latest
-            cmake_version: latest
             c_compiler: cl
             c_standard: "17"
 
     runs-on: ${{ matrix.os }}
-
-    env:
-      SCCACHE_GHA_ENABLED: "true"
 
     steps:
       - name: Checkout code
@@ -54,24 +44,13 @@ jobs:
         uses: ilammy/msvc-dev-cmd@v1
         if: runner.os == 'Windows' && matrix.c_compiler == 'cl'
 
-      - name: Setup sccache
-        uses: mozilla-actions/sccache-action@v0.0.11
-
-      - uses: lukka/get-cmake@latest
+      - name: Setup xmake
+        uses: xmake-io/github-action-setup-xmake@v1
         with:
-          cmakeVersion: ${{ matrix.cmake_version }}
-        if: matrix.cmake_version != 'latest'
+          xmake-version: latest
 
-      - name: Echo CMake version
-        run: cmake --version
+      - name: xmake configure
+        run: xmake f -l c${{ matrix.c_standard }} --cc=${{ matrix.c_compiler }} -m debug
 
-      - name: Configure CMake
-        run: >
-          cmake -B build
-          -G Ninja
-          -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
-          -DCMAKE_C_STANDARD=${{ matrix.c_standard }}
-          -DCMAKE_C_COMPILER_LAUNCHER=sccache
-
-      - name: CMake Build
-        run: cmake --build build --parallel
+      - name: xmake build
+        run: xmake

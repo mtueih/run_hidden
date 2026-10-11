@@ -8,7 +8,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	const unsigned cmd_line_length = run_hidden_build_cmd_line_from_argv(argc, argv, NULL, 0);
-	char *cmd_line = malloc(cmd_line_length + 1);
+	char *const cmd_line = malloc(cmd_line_length + 1);
 	if (cmd_line == NULL) {
 		return 1;
 	}

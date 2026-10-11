@@ -4,7 +4,6 @@
 
 
 int main(int argc, char *argv[]) {
-	Sleep(3000);
 	if (argc < 2) {
 		return 1;
 	}
@@ -15,8 +14,6 @@ int main(int argc, char *argv[]) {
 	}
 
 	for (int i = 0; i < argc; ++i) {
-		Sleep(3000);
-
 		if (fprintf(test_file, "%s\n", argv[i]) < 0) {
 			perror("fprintf");
 

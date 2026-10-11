@@ -52,7 +52,7 @@ int run_hidden_w_mut(wchar_t *cmd_line, bool is_wait);
  *
  * @return out_buf 为空时返回所需字节数（不包括 '\0'）；否则返回实际写入的字节数。
  */
-unsigned run_hidden_build_cmd_line(const char **args, unsigned args_count, char *out_buf,
+unsigned run_hidden_build_cmd_line(const char *const *args, unsigned args_count, char *out_buf,
 								   unsigned buf_len);
 
 /**

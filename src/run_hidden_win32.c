@@ -102,8 +102,8 @@ int run_hidden_w_mut(wchar_t *const cmd_line, const bool is_wait) {
 }
 
 /* 从参数串数组解析并构造完整命令行字符串。 */
-unsigned run_hidden_build_cmd_line(const char **args, unsigned args_count, char *out_buf,
-								   unsigned buf_len) {
+unsigned run_hidden_build_cmd_line(const char *const *const args, const unsigned args_count,
+								   char *const out_buf, const unsigned buf_len) {
 	/* 命令字符串的总长度。 */
 	unsigned total_length = 0;
 
@@ -116,7 +116,7 @@ unsigned run_hidden_build_cmd_line(const char **args, unsigned args_count, char 
 		EMIT_ONE('\"');                                                                            \
                                                                                                    \
 		unsigned backslash_count = 0;                                                              \
-		for (char *c = args[i]; *c != '\0'; ++c) {                                                 \
+		for (const char *c = args[i]; *c != '\0'; ++c) {                                           \
 			switch (*c) {                                                                          \
 			case '\\':                                                                             \
 				++backslash_count;                                                                 \

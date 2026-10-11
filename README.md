@@ -2,7 +2,7 @@
 
 ![Platform](https://img.shields.io/badge/Platform-Windows-blue)
 [![C Standard](https://img.shields.io/badge/C-C99+-blue.svg)](https://zh.cppreference.com/c)
-[![CMake](https://img.shields.io/badge/CMake-3.24+-green.svg)](https://cmake.org/)
+[![xmake](https://img.shields.io/badge/xmake-build-green.svg)](https://xmake.io/)
 [![GitHub License](https://img.shields.io/github/license/mtueih/run_hidden)](LICENSE)
 [![CI](https://github.com/mtueih/run_hidden/actions/workflows/ci.yml/badge.svg)](https://github.com/mtueih/run_hidden/actions/workflows/ci.yml)
 [![CD](https://github.com/mtueih/run_hidden/actions/workflows/cd.yml/badge.svg)](https://github.com/mtueih/run_hidden/actions/workflows/cd.yml)
@@ -80,34 +80,16 @@ int run_hidden_w_mut(wchar_t *cmd_line, bool is_wait);
 
 ## 在其他项目中使用（仅库）
 
-### 添加依赖
+### 使用 xmake
 
-#### CPM.cmake
+可以将本项目作为子目录加入你的 xmake 项目：
 
-环境要求：[CPM.cmake](https://github.com/cpm-cmake/CPM.cmake)。
+```lua
+add_subdirs("path/to/run_hidden")
 
-在 `CMakeLists.txt` 中：
-
-```cmake
-include(${PROJECT_SOURCE_DIR}/cmake/CPM.cmake)
-
-CPMAddPackage("gh:mtueih/run_hidden#v0.3.0")
-```
-
-#### CMake find_package（需已安装）
-
-在 `CMakeLists.txt` 中：
-
-```cmake
-find_package(run_hidden REQUIRED)
-```
-
-### 链接库
-
-在 `CMakeLists.txt` 中：
-
-```cmake
-target_link_libraries(your_target PRIVATE run_hidden::run_hidden)
+target("your_target")
+    add_deps("run_hidden")
+    add_includedirs("path/to/run_hidden/include")
 ```
 
 ### 在代码中使用
@@ -128,7 +110,7 @@ run_hidden("\"C:\\Program Files\\Notepad3\\Notepad3.exe\" temp.txt", false);
 
 ### 环境要求
 
-- [CMake](https://cmake.org/) 3.24+。
+- [xmake](https://xmake.io/)。
 - 支持 [C99](https://zh.cppreference.com/c/99)+ 的 [C 编译器](https://zh.cppreference.com/c/compiler_support)（MSVC / MinGW-w64 / Clang）。
 
 ### 构建步骤
@@ -143,15 +125,12 @@ cd run_hidden
 #### 配置、构建与安装
 
 ```bash
-cmake -B build -DCMAKE_BUILD_TYPE=Release -DRUN_HIDDEN_INSTALL_LIB=ON -DRUN_HIDDEN_INSTALL_CLI=ON
-cmake --build build --config Release --parallel
-cmake --install build --config Release --strip --prefix install
+xmake f -m release --install_lib=y --install_cli=y
+xmake -j
+xmake install -o install
 ```
 
-有关上述命令的说明：
-
-- 配置命令。通过 `-DRUN_HIDDEN_INSTALL_LIB=ON` 与 `-DRUN_HIDDEN_INSTALL_CLI=ON` 分别启用了库与 CLI 工具的安装，你可以按需安装，如果不需要安装某一个，将对应选项删除即可。
-- 安装命令。通过 `--prefix install` 将产物安装在了 `install` 目录下，而不是全局安装，以便你按自己的方式使用安装产物。如果你希望全局安装，则删除它即可。
+`--install_lib=y` 与 `--install_cli=y` 分别启用库和 CLI 工具的安装；不需要安装某项时可删除对应选项。`xmake install -o install` 会将产物安装到 `install` 目录。CLI 默认参与构建，可用 `--build_cli=n` 关闭；C 标准默认为 C99，可用 `--c_standard=17` 或 `--c_standard=23` 切换。
 
 ## 许可协议
 

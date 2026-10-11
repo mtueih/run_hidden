@@ -95,7 +95,7 @@ unsigned run_hidden_build_cmd_line(
 
 ## 在其他项目中使用（仅库）
 
-### 使用 xmake
+### xmake
 
 可以将本项目作为子目录加入你的 xmake 项目：
 
@@ -104,7 +104,6 @@ add_subdirs("path/to/run_hidden")
 
 target("your_target")
     add_deps("run_hidden")
-    add_includedirs("path/to/run_hidden/include")
 ```
 
 ### 在代码中使用

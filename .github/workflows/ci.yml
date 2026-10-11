@@ -16,25 +16,7 @@ on:
 
 jobs:
   build:
-    strategy:
-      fail-fast: false
-
-      matrix:
-        os: [windows-latest]
-        c_compiler: [cl]
-        c_standard: ["99", "23"]
-
-        exclude:
-          - os: windows-latest
-            c_compiler: cl
-            c_standard: "23"
-
-        include:
-          - os: windows-latest
-            c_compiler: cl
-            c_standard: "17"
-
-    runs-on: ${{ matrix.os }}
+    runs-on: windows-latest
 
     steps:
       - name: Checkout code
@@ -50,7 +32,7 @@ jobs:
           xmake-version: latest
 
       - name: xmake configure
-        run: xmake f -l c${{ matrix.c_standard }} --cc=${{ matrix.c_compiler }} -m debug
+        run: xmake f -m debug
 
       - name: xmake build
         run: xmake

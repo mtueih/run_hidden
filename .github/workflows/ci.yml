@@ -35,4 +35,4 @@ jobs:
         run: xmake f -m debug
 
       - name: xmake build
-        run: xmake
+        run: xmake -v

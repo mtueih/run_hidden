@@ -1,7 +1,7 @@
 add_rules("mode.debug", "mode.release")
 
 set_project("run_hidden")
-set_version("0.3.0")
+set_version("0.4.0")
 
 
 -- lib.

@@ -12,23 +12,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Setup MSVC
-        uses: ilammy/msvc-dev-cmd@v1
-
       - name: Setup xmake
         uses: xmake-io/github-action-setup-xmake@v1
         with:
           xmake-version: latest
 
-      - name: Configure and build
+      - name: xmake configure and build
         run: xmake
 
-      - name: Install
+      - name: xmake install
         run: xmake install -o run_hidden-${{ github.ref_name }}-win64
 
       - name: Package artifacts
         run: >
-          7z a run_hidden-${{ github.ref_name }}-win64.zip run_hidden-${{ github.ref_name }}-win64
+          Compress-Archive 
+          -Path run_hidden-${{ github.ref_name }}-win64 
+          -DestinationPath run_hidden-${{ github.ref_name }}-win64.zip -Force
 
       - name: Upload artifact
         uses: actions/upload-artifact@v7

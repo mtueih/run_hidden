@@ -2,7 +2,7 @@
 
 ![Platform](https://img.shields.io/badge/Platform-Windows_XP+-blue.svg)
 [![C Standard](https://img.shields.io/badge/C-C99+-blue.svg)](https://zh.cppreference.com/c)
-[![xmake](https://img.shields.io/badge/Build_System-xmake-green.svg)](https://xmake.io/)
+[![xmake](https://img.shields.io/badge/Build_System-xmake/CMake_3.24+-green.svg)](https://xmake.io/)
 [![GitHub License](https://img.shields.io/github/license/mtueih/run_hidden)](LICENSE)
 [![CI](https://github.com/mtueih/run_hidden/actions/workflows/ci.yml/badge.svg)](https://github.com/mtueih/run_hidden/actions/workflows/ci.yml)
 [![CD](https://github.com/mtueih/run_hidden/actions/workflows/cd.yml/badge.svg)](https://github.com/mtueih/run_hidden/actions/workflows/cd.yml)

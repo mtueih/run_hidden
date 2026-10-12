@@ -93,15 +93,51 @@ unsigned run_hidden_build_cmd_line(
 
 ## 在其他项目中使用（仅库）
 
-### xmake
+### 添加依赖
+
+#### xmake
 
 ```lua
 add_repositories("mtueih https://github.com/mtueih/my-xmake-packages.git")
 
 add_requires("run_hidden 0.4.0")
+```
 
+#### CPM.cmake
+
+环境要求：[CPM.cmake](https://github.com/cpm-cmake/CPM.cmake)。
+
+在 `CMakeLists.txt` 中：
+
+```cmake
+include(${PROJECT_SOURCE_DIR}/cmake/CPM.cmake)
+
+CPMAddPackage("gh:mtueih/run_hidden#v0.4.0")
+```
+
+#### CMake `find_package`（需已安装）
+
+在 `CMakeLists.txt` 中：
+
+```cmake
+find_package(run_hidden REQUIRED)
+```
+
+### 链接库
+
+#### xmake
+
+```lua
 target("your_target")
     add_packages("run_hidden")
+```
+
+#### CMake
+
+在 `CMakeLists.txt` 中：
+
+```cmake
+target_link_libraries(your_target PRIVATE run_hidden::run_hidden)
 ```
 
 ### 在代码中使用
@@ -123,7 +159,7 @@ run_hidden("\"C:\\Program Files\\Notepad3\\Notepad3.exe\" temp.txt", false);
 ### 环境要求
 
 - **操作系统**：Windows XP+。
-- **构建工具**：[xmake](https://xmake.io/) 最新版。
+- **构建工具**：[xmake](https://xmake.io/) 最新版，或[CMake](https://cmake.org/) 3.24+。
 - **C 编译器**：支持 C99+ （Windows 推荐 MSVC）。
 
 ### 构建步骤
@@ -137,6 +173,8 @@ cd run_hidden
 
 #### 配置、构建与安装
 
+##### xmake
+
 ```bash
 xmake
 xmake install -o install
@@ -145,6 +183,19 @@ xmake install -o install
 有关上述命令的说明：
 
 - 安装命令。通过 `-o install` 将产物安装在了 `install` 目录下，而不是全局安装，以便你按自己的方式使用安装产物。如果你希望全局安装，则删除它即可。
+
+##### CMake
+
+```bash
+cmake -B build -DCMAKE_BUILD_TYPE=Release -DRUN_HIDDEN_INSTALL_LIB=ON -DRUN_HIDDEN_INSTALL_CLI=ON
+cmake --build build --config Release --parallel
+cmake --install build --config Release --strip --prefix install
+```
+
+有关上述命令的说明：
+
+- 配置命令。通过 `-DRUN_HIDDEN_INSTALL_LIB=ON` 与 `-DRUN_HIDDEN_INSTALL_CLI=ON` 分别启用了库与 CLI 工具的安装，你可以按需安装，如果不需要安装某一个，将对应选项删除即可。
+- 安装命令。通过 `--prefix install` 将产物安装在了 `install` 目录下，而不是全局安装，以便你按自己的方式使用安装产物。如果你希望全局安装，则删除它即可。
 
 ## 许可协议
 

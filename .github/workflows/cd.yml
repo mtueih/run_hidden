@@ -12,22 +12,30 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Setup xmake
-        uses: xmake-io/github-action-setup-xmake@v1
-        with:
-          xmake-version: latest
+      - name: Setup MSVC
+        uses: ilammy/msvc-dev-cmd@v1
 
-      - name: xmake configure and build
-        run: xmake
+      - name: Configure CMake
+        run: >
+          cmake . -B build
+          -G Ninja
+          -DCMAKE_C_COMPILER=cl
+          -DCMAKE_BUILD_TYPE=Release
+          -DRUN_HIDDEN_INSTALL_CLI=ON
+          -DRUN_HIDDEN_INSTALL_LIB=ON
 
-      - name: xmake install
-        run: xmake install -o run_hidden-${{ github.ref_name }}-win64
+      - name: CMake Build
+        run: cmake --build build --parallel
+
+      - name: CMake Installation
+        run: >
+          cmake --install build --strip 
+          --prefix run_hidden-${{ github.ref_name }}-win64
 
       - name: Package artifacts
         run: >
-          Compress-Archive 
-          -Path run_hidden-${{ github.ref_name }}-win64 
-          -DestinationPath run_hidden-${{ github.ref_name }}-win64.zip -Force
+          cmake -E tar cf run_hidden-${{ github.ref_name }}-win64.zip
+          --format=zip run_hidden-${{ github.ref_name }}-win64
 
       - name: Upload artifact
         uses: actions/upload-artifact@v7

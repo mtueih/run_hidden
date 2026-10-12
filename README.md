@@ -2,7 +2,7 @@
 
 ![Platform](https://img.shields.io/badge/Platform-Windows_XP+-blue.svg)
 [![C Standard](https://img.shields.io/badge/C-C99+-blue.svg)](https://zh.cppreference.com/c)
-![xmake](https://img.shields.io/badge/Build_System-xmake/CMake_3.24+-green.svg)
+[![CMake](https://img.shields.io/badge/CMake-3.24+-green.svg)](https://cmake.org/)
 [![GitHub License](https://img.shields.io/github/license/mtueih/run_hidden)](LICENSE)
 [![CI](https://github.com/mtueih/run_hidden/actions/workflows/ci.yml/badge.svg)](https://github.com/mtueih/run_hidden/actions/workflows/ci.yml)
 [![CD](https://github.com/mtueih/run_hidden/actions/workflows/cd.yml/badge.svg)](https://github.com/mtueih/run_hidden/actions/workflows/cd.yml)
@@ -95,14 +95,6 @@ unsigned run_hidden_build_cmd_line(
 
 ### 添加依赖
 
-#### xmake
-
-```lua
-add_repositories("mtueih https://github.com/mtueih/my-xmake-packages.git")
-
-add_requires("run_hidden 0.4.0")
-```
-
 #### CPM.cmake
 
 环境要求：[CPM.cmake](https://github.com/cpm-cmake/CPM.cmake)。
@@ -124,15 +116,6 @@ find_package(run_hidden REQUIRED)
 ```
 
 ### 链接库
-
-#### xmake
-
-```lua
-target("your_target")
-    add_packages("run_hidden")
-```
-
-#### CMake
 
 在 `CMakeLists.txt` 中：
 
@@ -159,7 +142,7 @@ run_hidden("\"C:\\Program Files\\Notepad3\\Notepad3.exe\" temp.txt", false);
 ### 环境要求
 
 - **操作系统**：Windows XP+。
-- **构建工具**：[xmake](https://xmake.io/) 最新版，或[CMake](https://cmake.org/) 3.24+。
+- **构建工具**：[CMake](https://cmake.org/) 3.24+。
 - **C 编译器**：支持 C99+ （Windows 推荐 MSVC）。
 
 ### 构建步骤
@@ -172,19 +155,6 @@ cd run_hidden
 ```
 
 #### 配置、构建与安装
-
-##### xmake
-
-```bash
-xmake
-xmake install -o install
-```
-
-有关上述命令的说明：
-
-- 安装命令。通过 `-o install` 将产物安装在了 `install` 目录下，而不是全局安装，以便你按自己的方式使用安装产物。如果你希望全局安装，则删除它即可。
-
-##### CMake
 
 ```bash
 cmake -B build -DCMAKE_BUILD_TYPE=Release -DRUN_HIDDEN_INSTALL_LIB=ON -DRUN_HIDDEN_INSTALL_CLI=ON

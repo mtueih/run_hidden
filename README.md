@@ -9,8 +9,6 @@
 
 Windows 下以隐藏窗口启动进程的轻量级工具（含 CLI + C 库）。
 
-目前只支持 Windows 平台。
-
 ## CLI
 
 此项目包含两个 CLI 工具：`run_hidden` 和 `run_hidden_wait`。

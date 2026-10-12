@@ -7,7 +7,7 @@
 [![CI](https://github.com/mtueih/run_hidden/actions/workflows/ci.yml/badge.svg)](https://github.com/mtueih/run_hidden/actions/workflows/ci.yml)
 [![CD](https://github.com/mtueih/run_hidden/actions/workflows/cd.yml/badge.svg)](https://github.com/mtueih/run_hidden/actions/workflows/cd.yml)
 
-一个用于以隐藏窗口方式启动外部进程的轻量级 C 库。
+Windows 下以隐藏窗口启动进程的轻量级工具（含 CLI + C 库）。
 
 目前只支持 Windows 平台。
 

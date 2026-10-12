@@ -95,13 +95,13 @@ unsigned run_hidden_build_cmd_line(
 
 ### xmake
 
-可以将本项目作为子目录加入你的 xmake 项目：
-
 ```lua
-add_subdirs("path/to/run_hidden")
+add_repositories("mtueih https://github.com/mtueih/my-xmake-packages.git")
+
+add_requires("run_hidden 0.4.0")
 
 target("your_target")
-    add_deps("run_hidden")
+    add_packages("run_hidden")
 ```
 
 ### 在代码中使用

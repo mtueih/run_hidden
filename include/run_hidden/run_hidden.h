@@ -71,7 +71,11 @@ unsigned run_hidden_build_cmd_line(
  * @return out_buf 为空时返回所需字节数（不包括 '\0'）；否则返回实际写入的字节数。
  */
 #define run_hidden_build_cmd_line_from_argv(argc, argv, out_buf, buf_len)                          \
-	run_hidden_build_cmd_line((argv) + 1, (argc) - 1, out_buf, buf_len)
+	run_hidden_build_cmd_line(                                                                     \
+		(const char *const *)(argv) + 1,                                                           \
+		(unsigned)(argc) - 1,                                                                      \
+		out_buf, buf_len                                                                           \
+	)
 
 
 #endif

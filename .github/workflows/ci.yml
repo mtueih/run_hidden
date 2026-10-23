@@ -23,23 +23,11 @@ jobs:
         os: [windows-latest]
         cmake_version: [3.24.0, latest]
         c_compiler: [cl]
-        c_standard: ["99", "23"]
+        c_standard: ["99", "17", "23"]
 
         exclude:
-          - os: windows-latest
-            c_compiler: cl
+          - c_compiler: cl
             c_standard: "23"
-
-        include:
-          - os: windows-latest
-            cmake_version: 3.24.0
-            c_compiler: cl
-            c_standard: "17"
-
-          - os: windows-latest
-            cmake_version: latest
-            c_compiler: cl
-            c_standard: "17"
 
     runs-on: ${{ matrix.os }}
 
@@ -50,17 +38,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v7
 
+      # 使用 Ninja 生成器时，识别不到 cl 编译器，因此需要显式处理。
       - name: Setup MSVC
         uses: ilammy/msvc-dev-cmd@v1
-        if: runner.os == 'Windows' && matrix.c_compiler == 'cl'
+        if: matrix.c_compiler == 'cl'
 
       - name: Setup sccache
         uses: mozilla-actions/sccache-action@v0.0.11
 
-      - uses: lukka/get-cmake@latest
+      - name: Setup CMake
+        uses: lukka/get-cmake@latest
         with:
           cmakeVersion: ${{ matrix.cmake_version }}
-        if: matrix.cmake_version != 'latest'
 
       - name: Echo CMake version
         run: cmake --version

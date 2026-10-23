@@ -143,7 +143,8 @@ run_hidden("\"C:\\Program Files\\Notepad3\\Notepad3.exe\" temp.txt", false);
 
 - **操作系统**：Windows XP+。
 - **构建工具**：[CMake](https://cmake.org/) 3.24+。
-- **C 编译器**：支持 C99+ （Windows 推荐 MSVC）。
+- **C 编译器**：支持 C99+ 的 C 编译器。
+- **生成工具**：Ninja、make 等。
 
 ### 构建步骤
 

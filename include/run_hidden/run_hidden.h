@@ -52,8 +52,12 @@ int run_hidden_w_mut(wchar_t *cmd_line, bool is_wait);
  *
  * @return out_buf 为空时返回所需字节数（不包括 '\0'）；否则返回实际写入的字节数。
  */
-unsigned run_hidden_build_cmd_line(const char *const *args, unsigned args_count, char *out_buf,
-								   unsigned buf_len);
+unsigned run_hidden_build_cmd_line(
+	const char *const *args,
+	unsigned args_count,
+	char *out_buf,
+	unsigned buf_len
+);
 
 /**
  * @brief 从来自 main 函数的 argc 和 argv 解析并构造完整命令行字符串（忽略 argv[0]）。

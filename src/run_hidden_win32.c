@@ -102,8 +102,10 @@ int run_hidden_w_mut(wchar_t *const cmd_line, const bool is_wait) {
 }
 
 /* 从参数串数组解析并构造完整命令行字符串。 */
-unsigned run_hidden_build_cmd_line(const char *const *const args, const unsigned args_count,
-								   char *const out_buf, const unsigned buf_len) {
+unsigned run_hidden_build_cmd_line(
+	const char *const *const args, const unsigned args_count,
+	char *const out_buf, const unsigned buf_len
+) {
 	/* 命令字符串的总长度。 */
 	unsigned total_length = 0;
 
@@ -143,7 +145,7 @@ unsigned run_hidden_build_cmd_line(const char *const *const args, const unsigned
 
 	/* 1. 仅计算长度模式。 */
 	if (out_buf == NULL) {
-/* 定义计算模式下的 EMIT 宏。 */
+		/* 定义计算模式下的 EMIT 宏。 */
 #define EMIT_ONE_CALC(c)                                                                           \
 	(void)(c);                                                                                     \
 	++total_length
@@ -158,7 +160,7 @@ unsigned run_hidden_build_cmd_line(const char *const *const args, const unsigned
 	}
 	/* 2. 写入缓冲区模式。 */
 	else {
-/* 定义写入模式下的 EMIT 宏。 */
+		/* 定义写入模式下的 EMIT 宏。 */
 #define OUT_BUF_WRITE(c)                                                                           \
 	if (total_length < buf_len) {                                                                  \
 		out_buf[total_length++] = (c);                                                             \
@@ -178,7 +180,7 @@ unsigned run_hidden_build_cmd_line(const char *const *const args, const unsigned
 #undef EMIT_ONE_WRITE
 #undef OUT_BUF_WRITE
 
-	end:
+end:
 		out_buf[total_length] = '\0';
 	}
 #undef PROCESS_ARGS

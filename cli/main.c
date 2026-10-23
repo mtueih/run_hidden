@@ -1,4 +1,5 @@
 #include "run_hidden/run_hidden.h"
+
 #include <stdlib.h>
 
 
@@ -15,11 +16,12 @@ int main(int argc, char *argv[]) {
 	run_hidden_build_cmd_line_from_argv(argc, argv, cmd_line, cmd_line_length);
 
 	/* 调用函数执行命令行，并接受退出码。 */
-	const int exit_code = run_hidden(cmd_line,
+	const int exit_code = run_hidden(
+		cmd_line,
 #ifdef RUN_HIDDEN_CLI_WAIT_MODE
-									 true
+		true
 #else
-									 false
+		false
 #endif
 	);
 

@@ -19,7 +19,7 @@
 
 /* 隐藏执行一行命令。 */
 int run_hidden(const char *const cmd_line, const bool is_wait) {
-	/* 将系统代码也编码字符串转换成 UTF-16 编码字符串。 */
+	/* 将系统代码页编码字符串转换成 UTF-16 编码字符串。 */
 	/* 计算 UTF-16 字符串的长度，包括终止符。 */
 	const int wide_len = MultiByteToWideChar(
 		CP_ACP, 0,

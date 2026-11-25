@@ -1,4 +1,3 @@
-#include <Windows.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -8,7 +7,7 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 
-	FILE *test_file = fopen("test.txt", "w");
+	FILE *const test_file = fopen("test.txt", "w");
 	if (test_file == NULL) {
 		return 1;
 	}
@@ -27,5 +26,6 @@ int main(int argc, char *argv[]) {
 	if (fclose(test_file) == EOF) {
 		return 1;
 	}
+
 	return 0;
 }
